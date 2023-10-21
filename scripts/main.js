@@ -49,7 +49,7 @@ const clickEqual = (inputVal) => {
 };
 
 const clickSign = (inputVal, newSymbol) => {
-    if (isFirstSymbolSign(inputVal)) {
+    if (isFirstSymbolSign(inputVal) && newSymbol !== '-') {
         input.value = input.value;
     } else if (isLastSymbolSign(inputVal) || isLastSymbolDot(inputVal)) {
         input.value = inputVal.substring(0, inputVal.length - 1) + newSymbol;
