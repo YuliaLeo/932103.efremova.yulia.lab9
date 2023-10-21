@@ -1,7 +1,8 @@
-const signs = ['+', '-', '*', '/', '.'];
+const signs = ['+', '-', '*', '/'];
 const clearSign = 'C';
 const removeOneSymbolSign = '<-';
 const equalSign = '=';
+const dotSign = '.';
 
 const btnsContainer = document.querySelector('.calculator__btns');
 const input = document.querySelector('.calculator__input input');
@@ -31,13 +32,16 @@ const calc = (inputVal, newSymbol) => {
     else if (newSymbol === clearSign) {
         input.value = '';
     }
+    else if (newSymbol === dotSign) {
+        clickDot(inputVal);
+    }
     else {
         signs.includes(newSymbol) ? clickSign(inputVal, newSymbol) : input.value += newSymbol;
     }
 }
 
 const clickEqual = (inputVal) => {
-    if (isLastSymbolSign(inputVal)) {
+    if (isLastSymbolSign(inputVal) || isLastSymbolDot(inputVal)) {
         input.value = inputVal.substring(0, inputVal.length - 1);
     }
 
@@ -45,11 +49,37 @@ const clickEqual = (inputVal) => {
 };
 
 const clickSign = (inputVal, newSymbol) => {
-    if (isFirstSymbolSign(inputVal) || isLastSymbolSign(inputVal)) {
+    if (isFirstSymbolSign(inputVal)) {
         input.value = input.value;
+    } else if (isLastSymbolSign(inputVal) || isLastSymbolDot(inputVal)) {
+        input.value = inputVal.substring(0, inputVal.length - 1) + newSymbol;
     }
     else {
         input.value += newSymbol;
+    }
+};
+
+const clickDot = (inputVal) => {
+    if (isLastSymbolSign(inputVal) || isLastSymbolDot(inputVal)) {
+        return;
+    }
+
+    let dotsCount = 0;
+
+    for (let i = inputVal.length - 1; i >= 0; i--) {
+        if (inputVal[i] === dotSign) {
+            dotsCount++;
+        }
+
+        if (signs.includes(inputVal[i])) {
+            break;
+        }
+    }
+
+    if (dotsCount !== 0) {
+        input.value = input.value;
+    } else {
+        input.value += dotSign;
     }
 };
 
@@ -60,4 +90,9 @@ const isFirstSymbolSign = (inputVal) => {
 const isLastSymbolSign = (inputVal) => {
     const lastSymbol = inputVal.slice(inputVal.length - 1, inputVal.length);
     return signs.includes(lastSymbol);
+};
+
+const isLastSymbolDot = (inputVal) => {
+    const lastSymbol = inputVal.slice(inputVal.length - 1, inputVal.length);
+    return '.' === lastSymbol;
 };
